@@ -309,9 +309,14 @@
         color: #16a34a;
     }
 
-    .status-available {
+    .status-pending {
         background: rgba(241, 196, 15, 0.2);
         color: #d97706;
+    }
+
+    .status-available {
+        background: rgba(156, 163, 175, 0.2);
+        color: #6b7280;
     }
 
     .subject-details {
@@ -375,8 +380,30 @@
         box-shadow: 0 4px 12px rgba(26, 71, 42, 0.3);
     }
 
-    button.enrolled {
-        background:#4ade80;
+    button.access-subject {
+        background:#1a472a;
+        color:white;
+        padding:0.85rem 1.5rem;
+        border-radius:10px;
+        font-weight:600;
+        border:none;
+        cursor:pointer;
+        width: 100%;
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+    }
+
+    button.access-subject:hover {
+        background:#0f2d1a;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(26, 71, 42, 0.3);
+    }
+
+    button.pending {
+        background:#f59e0b;
         color:white;
         padding:0.85rem 1.5rem;
         border-radius:10px;
@@ -385,6 +412,28 @@
         cursor:default;
         width: 100%;
         margin-top: 1rem;
+    }
+
+    /* Alert Messages */
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .alert-success {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+    }
+
+    .alert-error {
+        background: #fee2e2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
     }
 
     /* Responsive */
@@ -513,6 +562,19 @@
         </div>
     </div>
 
+    <!-- Success/Error Messages -->
+    @if(session('success'))
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i> {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
+        </div>
+    @endif
+
     <!-- Welcome Card -->
     <div class="card welcome-card">
         <div class="welcome-icon">
@@ -547,7 +609,11 @@
         <div class="subject-grid">
             @foreach($subjects as $subject)
                 @php
-                    $enrolled = in_array($subject->id, $enrollments);
+                    // Get enrollment status for this subject
+                    $enrollment = $enrollments->where('subject_id', $subject->id)->first();
+                    $isEnrolled = $enrollment !== null;
+                    $paymentStatus = $enrollment ? $enrollment->payment_status : null;
+
                     $icons = [
                         'Mathematics' => 'fas fa-calculator',
                         'Biology' => 'fas fa-dna',
@@ -562,19 +628,32 @@
                         <div class="subject-icon">
                             <i class="{{ $icon }}"></i>
                         </div>
-                        <div class="subject-status {{ $enrolled ? 'status-enrolled' : 'status-available' }}">
-                            {{ $enrolled ? 'Enrolled' : 'Available' }}
+                        <div class="subject-status
+                            @if($isEnrolled && $paymentStatus === 'paid') status-enrolled
+                            @elseif($isEnrolled && $paymentStatus === 'pending') status-pending
+                            @else status-available @endif">
+                            @if($isEnrolled && $paymentStatus === 'paid')
+                                Enrolled & Paid
+                            @elseif($isEnrolled && $paymentStatus === 'pending')
+                                Pending Payment
+                            @else
+                                Available
+                            @endif
                         </div>
                     </div>
                     <h4>{{ $subject->title }}</h4>
                     <p>{{ $subject->description ?? 'Master this subject with our comprehensive curriculum.' }}</p>
 
-                    @if($enrolled)
-                        <button class="enrolled">
-                            <i class="fas fa-check-circle"></i> Already Enrolled
+                    @if($isEnrolled && $paymentStatus === 'paid')
+                        <a href="{{ route('student.subject.show', $subject->id) }}" class="access-subject">
+                            <i class="fas fa-door-open"></i> Enter Subject
+                        </a>
+                    @elseif($isEnrolled && $paymentStatus === 'pending')
+                        <button class="pending">
+                            <i class="fas fa-clock"></i> Payment Pending
                         </button>
                     @else
-                        <form method="POST" action="#">
+                        <form method="POST" action="{{ route('enroll.subject', $subject->id) }}">
                             @csrf
                             <button type="submit" class="enroll">
                                 <i class="fas fa-plus-circle"></i> Enroll Now

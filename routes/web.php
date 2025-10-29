@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentDashboardController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\EnrollmentController;
 use Illuminate\Support\Facades\Route;
 
 // Public route
@@ -18,6 +20,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return redirect()->route('student.dashboard');
         } elseif ($user->role === 'teacher') {
             return redirect()->route('teacher.dashboard');
+        } elseif ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
         }
 
         return view('dashboard'); // fallback
@@ -35,19 +39,31 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('student.dashboard');
 });
 
-use App\Http\Controllers\EnrollmentController;
-
-// ...
-
-// Enroll in a subject (POST)
+// Enrollment routes
 Route::middleware(['auth', 'verified'])->post('/student/enroll/{subject}', [EnrollmentController::class, 'enroll'])
     ->name('enroll.subject');
 
-// Teacher dashboard (example)
+// Teacher dashboard
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/teacher/dashboard', function () {
         return view('teacher.dashboard');
     })->name('teacher.dashboard');
+});
+
+// Student subject access
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/student/subject/{subject}', [StudentDashboardController::class, 'showSubject'])
+        ->name('student.subject.show');
+});
+
+// Admin dashboard and management routes
+Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+        ->name('admin.dashboard');
+    Route::patch('/users/{user}', [AdminDashboardController::class, 'updateUserStatus'])
+        ->name('admin.users.update');
+    Route::patch('/payments/{enrollment}', [AdminDashboardController::class, 'updatePaymentStatus'])
+        ->name('admin.payments.update');
 });
 
 require __DIR__.'/auth.php';
