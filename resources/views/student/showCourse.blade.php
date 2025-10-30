@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teacher Dashboard - Restart Academy</title>
+<title>Student Dashboard - Millennium Academy</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -259,74 +259,77 @@
         opacity: 0.9;
     }
 
-    /* Stats Grid */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-        margin: 1.5rem 0;
-    }
-
-    .stat-card {
-        text-align: center;
-        padding: 1.5rem;
-        background: #f8fafc;
-        border-radius: 12px;
-        border-left: 4px solid #f1c40f;
-    }
-
-    .stat-value {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #1a472a;
-        line-height: 1;
-        margin-bottom: 0.5rem;
-    }
-
-    .stat-label {
-        font-size: 0.9rem;
-        color: #64748b;
-        font-weight: 500;
-    }
-
-    /* Quick Actions */
-    .quick-actions {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
+    /* Subject Grid */
+    .subject-grid {
+        display:grid;
+        grid-template-columns:repeat(auto-fit, minmax(320px,1fr));
+        gap:1.5rem;
         margin-top: 1.5rem;
     }
 
-    .action-btn {
+    .subject-card {
+        border-left: 4px solid #1a472a;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .subject-card:hover {
+        border-left-color: #f1c40f;
+        transform: translateY(-3px);
+    }
+
+    .subject-header {
         display: flex;
-        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+    .subject-icon {
+        width: 55px;
+        height: 55px;
+        background: rgba(26, 71, 42, 0.1);
+        border-radius: 12px;
+        display: flex;
         align-items: center;
         justify-content: center;
-        padding: 1.5rem 1rem;
-        background: white;
-        border-radius: 12px;
-        text-decoration: none;
         color: #1a472a;
-        transition: all 0.3s ease;
-        border: 1px solid #f1f5f9;
-        text-align: center;
+        font-size: 1.4rem;
     }
 
-    .action-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        color: #f1c40f;
-        border-color: #f1c40f;
+    .subject-status {
+        font-size: 0.8rem;
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 600;
     }
 
-    .action-icon {
-        font-size: 2rem;
-        margin-bottom: 0.75rem;
+    .status-enrolled {
+        background: rgba(74, 222, 128, 0.2);
+        color: #16a34a;
+    }
+
+    .status-available {
+        background: rgba(241, 196, 15, 0.2);
+        color: #d97706;
+    }
+
+    .subject-details {
+        margin: 1rem 0;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0.5rem 0;
+        font-size: 0.9rem;
+        color: #64748b;
+    }
+
+    .detail-item i {
         color: #1a472a;
-    }
-
-    .action-btn:hover .action-icon {
-        color: #f1c40f;
+        width: 16px;
     }
 
     /* Buttons */
@@ -353,7 +356,7 @@
         box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
     }
 
-    button.primary {
+    button.enroll {
         background:#1a472a;
         color:white;
         padding:0.85rem 1.5rem;
@@ -361,13 +364,27 @@
         font-weight:600;
         border:none;
         cursor:pointer;
+        width: 100%;
+        margin-top: 1rem;
         transition: all 0.3s ease;
     }
 
-    button.primary:hover {
+    button.enroll:hover {
         background:#0f2d1a;
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(26, 71, 42, 0.3);
+    }
+
+    button.enrolled {
+        background:#4ade80;
+        color:white;
+        padding:0.85rem 1.5rem;
+        border-radius:10px;
+        font-weight:600;
+        border:none;
+        cursor:default;
+        width: 100%;
+        margin-top: 1rem;
     }
 
     /* Responsive */
@@ -389,7 +406,7 @@
             display:block;
         }
 
-        .stats-grid, .quick-actions {
+        .subject-grid {
             grid-template-columns: 1fr;
         }
 
@@ -420,6 +437,174 @@
             padding: 1.5rem;
         }
     }
+
+
+     /* Quick Actions */
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .action-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem 1rem;
+        background: orange;
+        border-radius: 12px;
+        text-decoration: none;
+        color: #1a472a;
+        transition: all 0.3s ease;
+        border: 1px solid #f1f5f9;
+        text-align: center;
+        font-weight:bold;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        color: #fff;
+        border-color: #f1c40f;
+    }
+
+    .action-icon {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+        color: #1a472a;
+    }
+
+    .action-btn:hover .action-icon {
+        color: #f1c40f;
+    }
+
+    /**grid */
+    .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+      .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+     .grid, .features-grid, .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            
+        .course-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid #e5e7eb;
+            position: relative;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .course-header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: rgba(241, 196, 15, 0.2);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+
+        .course-header h4 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .course-body {
+            padding: 1.5rem;
+        }
+
+        .course-body p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .course-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .course-features li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .course-features i {
+            color: var(--primary);
+            font-size: 0.8rem;
+        }
+
+        .course-price {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .course-price span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        .course-btn {
+            display: block;
+            text-align: center;
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .course-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        
+
 </style>
 </head>
 <body>
@@ -432,43 +617,39 @@
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
     <div class="logo">
-        <div class="logo-icon">RA</div>
+        <div class="logo-icon">MA</div>
         <div class="logo-text">
-            <h1>Restart <span>Academy</span></h1>
-            <p>Teacher Portal</p>
+            <h1>Millennium <span>Academy</span></h1>
+            <p>Student Portal</p>
         </div>
     </div>
 
     <div class="sidebar-nav">
-        <a href="#" class="active">
+        <a href="{{ route('student.dashboard') }}" class="active">
             <i class="fas fa-home"></i>
             Dashboard
         </a>
-        <a href="{{route('teacher.videoUpload')}}">
-            <i class="fas fa-video"></i>
-            Upload Videos
-        </a>
-        <a href="{{route('teacher.documentUpload')}}">
-            <i class="fas fa-file"></i>
-            Upload Documents
+        <a href="{{route('student.course')}}">
+            <i class="fas fa-user-graduate"></i>
+            My Courses
         </a>
         <a href="#">
-            <i class="fas fa-calendar-plus"></i>
-            Live Sessions
+            <i class="fas fa-calendar-alt"></i>
+            Schedule
         </a>
         <a href="#">
-            <i class="fas fa-bullhorn"></i>
-            Announcements
-        </a>
-        <a href="#">
-            <i class="fas fa-comments"></i>
-            Student Chat
+            <i class="fas fa-tasks"></i>
+            Assignments
         </a>
         <a href="#">
             <i class="fas fa-chart-line"></i>
-            Performance
+            Progress
         </a>
-         <form method="POST" action="{{ route('logout') }}">
+        <a href="#">
+            <i class="fas fa-credit-card"></i>
+            Payments
+        </a>
+        <form method="POST" action="{{ route('logout') }}">
         @csrf
         <button type="submit" class="logout">
             <i class="fas fa-sign-out-alt"></i>
@@ -476,32 +657,26 @@
         </button>
     </form>
         <a href="#">
-            <i class="fas fa-cog"></i>
-            Settings
+            <i class="fas fa-headset"></i>
+            Support
         </a>
     </div>
 
-    <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button type="submit" class="logout">
-            <i class="fas fa-sign-out-alt"></i>
-            Logout
-        </button>
-    </form>
+
 </div>
 
 <!-- Main Content -->
 <div class="main-content">
     <!-- Header -->
     <div class="header">
-        <h1>Teacher Dashboard</h1>
+        <h1><i class="fas fa-book-open"></i> {{$subject}} Lesson</h1>
         <div class="user-info">
             <div class="user-avatar">
                 {{ substr(auth()->user()->name, 0, 1) }}
             </div>
             <div>
                 <div><strong>{{ auth()->user()->name }}</strong></div>
-                <div style="font-size: 0.85rem; color: #64748b;">Teacher</div>
+                <div style="font-size: 0.85rem; color: #64748b;">Student ID: STU-{{ substr(auth()->user()->id, 0, 6) }}</div>
             </div>
         </div>
     </div>
@@ -509,130 +684,63 @@
     <!-- Welcome Card -->
     <div class="card welcome-card">
         <div class="welcome-icon">
-            <i class="fas fa-chalkboard-teacher"></i>
+            <i class="fas fa-graduation-cap"></i>
         </div>
         <div>
-            <h2>Welcome back, {{ auth()->user()->name }}!</h2>
-            <p>Manage your classes, upload content, and connect with your students.</p>
-        </div>
-    </div>
-
-    <!-- Stats Overview -->
-    <div class="card">
-        <h3>Teaching Overview</h3>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value">24</div>
-                <div class="stat-label">Total Students</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">{{$videoCount }}</div>
-                <div class="stat-label">Videos Uploaded</div>
-            </div>
-             <div class="stat-card">
-                <div class="stat-value">{{$docCount }}</div>
-                <div class="stat-label">Documents Uploaded</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">8</div>
-                <div class="stat-label">Live Sessions</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">15</div>
-                <div class="stat-label">Announcements</div>
-            </div>
+            <h2>Student Documents & Video Lesson</h2>
+            <p>Continue your learning journey. You have access to all available videos and documents below.</p>
         </div>
     </div>
 
     <!-- Quick Actions -->
     <div class="card">
-        <h3>Quick Actions</h3>
-        <div class="quick-actions">
-            <a href="{{route('teacher.videoUpload')}}" class="action-btn">
-                <div class="action-icon">
-                    <i class="fas fa-video"></i>
+        <h3>View Course</h3>
+        
+        <div class="grid" id="courseList">
+
+                    <div class="course-card">
+                    <div class="course-header">
+                        <h4 style="color:darkgreen;"><i class="fas fa-video"></i> Videos Lesson</h4>
+                    </div>
+                    <div class="course-body">
+                      @if($latestVideo)  
+                    <p>Develop strong problem-solving skills with {{$latestVideo->title}} and practice the below video topics.</p>
+                        @endif
+                        <ul class="course-features">
+                        @foreach($video as $vd)
+                            <li><i class="fas fa-check" style="font-size:20px; color:darkgreen;"></i> <b>{{$vd->title}}</b> - uploaded at {{$latestVideo->created_at->format('l, jS, F Y')}}</li>
+                        @endforeach    
+                        </ul>
+                       
+                        <a href="{{ route('student.displayVideo', $subject) }}" class="action-btn"> Watch Video Now</a>
+                    </div>
                 </div>
-                <div>Upload Video</div>
-            </a>
-            <a href="{{route('teacher.documentUpload')}}" class="action-btn">
-                <div class="action-icon">
-                    <i class="fas fa-file"></i>
+
+                <div class="course-card">
+                    <div class="course-header">
+                        <h4 style="color:darkgreen;"><i class="fas fa-file"></i> Documents/Files Lesson</h4>
+                    </div>
+                    <div class="course-body">
+                        @if($latestDocument)  
+                    <p>Develop strong problem-solving skills with {{$latestDocument->title}} and practice the below documents topics.</p>
+                        @endif
+                        <ul class="course-features">
+                       @foreach($document as $doc)
+                            <li><i class="fas fa-check" style="font-size:20px; color:darkgreen;"></i> <b>{{$doc->title}}</b> - uploaded at {{$latestDocument->created_at->format('l, jS, F Y')}}</li>
+                        @endforeach 
+                        </ul>
+                        
+                        <a href="{{ route('student.displayDocument', $subject) }}" class="action-btn"> View Documents Now</a>
+                    </div>
                 </div>
-                <div>Upload Documents</div>
-            </a>
-            <a href="#" class="action-btn">
-                <div class="action-icon">
-                    <i class="fas fa-calendar-plus"></i>
-                </div>
-                <div>Schedule Live Session</div>
-            </a>
-            <a href="#" class="action-btn">
-                <div class="action-icon">
-                    <i class="fas fa-bullhorn"></i>
-                </div>
-                <div>Post Announcement</div>
-            </a>
-            <a href="#" class="action-btn">
-                <div class="action-icon">
-                    <i class="fas fa-comments"></i>
-                </div>
-                <div>Student Messages</div>
-            </a>
-        </div>
+
+     
+    
     </div>
 
-    <!-- Recent Activity -->
-    <div class="card">
-        <h3>Recent Activity</h3>
-        <div style="margin-top: 1rem;">
-            <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #f1f5f9;">
-                <div style="width: 40px; height: 40px; background: rgba(26, 71, 42, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #1a472a;">
-                    <i class="fas fa-video"></i>
-                </div>
-                <div>
-                    <div style="font-weight: 600;">New video uploaded</div>
-                    @if($latestVideo)
-                    <div style="font-size: 0.85rem; color: #64748b;">{{$latestVideo->title}} - {{ $latestVideo->created_at->format('d M Y h:i A') }}</div>
-                    @else
-               <p>No video found.</p>
-                @endif
-                </div>
-            </div>
-
-             <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #f1f5f9;">
-                <div style="width: 40px; height: 40px; background: rgba(26, 71, 42, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #1a472a;">
-                    <i class="fas fa-file"></i>
-                </div>
-                <div>
-                    <div style="font-weight: 600;">New Document uploaded</div>
-                    @if($latestDocument)
-                    <div style="font-size: 0.85rem; color: #64748b;">{{ $latestDocument->title }} - {{ $latestDocument->created_at->format('d M Y h:i A') }}</div>
-                    @else
-               <p>No document found.</p>
-                @endif
-                </div>
-            </div>
-
-            <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #f1f5f9;">
-                <div style="width: 40px; height: 40px; background: rgba(241, 196, 15, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #d97706;">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <div>
-                    <div style="font-weight: 600;">Live session completed</div>
-                    <div style="font-size: 0.85rem; color: #64748b;">Calculus Review - 1 day ago</div>
-                </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem 0;">
-                <div style="width: 40px; height: 40px; background: rgba(74, 222, 128, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #16a34a;">
-                    <i class="fas fa-bullhorn"></i>
-                </div>
-                <div>
-                    <div style="font-weight: 600;">Announcement posted</div>
-                    <div style="font-size: 0.85rem; color: #64748b;">Exam Schedule - 2 days ago</div>
-                </div>
-            </div>
-        </div>
     </div>
+
+    
 </div>
 
 <script>

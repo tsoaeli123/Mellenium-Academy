@@ -510,7 +510,7 @@
             <i class="fas fa-home"></i>
             Dashboard
         </a>
-        <a href="#">
+        <a href="{{route('student.course')}}">
             <i class="fas fa-user-graduate"></i>
             My Courses
         </a>

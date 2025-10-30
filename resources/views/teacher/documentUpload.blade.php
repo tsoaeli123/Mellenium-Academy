@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teacher Dashboard - Restart Academy</title>
+ <meta name="csrf-token" content="{{ csrf_token() }}">
+<title>Teacher Dashboard - File Upload</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -420,6 +421,141 @@
             padding: 1.5rem;
         }
     }
+
+
+.upload-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      width: 600px;
+      text-align: center;
+    }
+
+    .upload-container h2 {
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    /* ===== Title Input ===== */
+    .input-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .input-group label {
+      font-weight: 600;
+      color: #555;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .input-group input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .input-group input[type="text"]:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+
+    .input-group select{
+          border-color: #007bff;
+          width: 100%;  
+          padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.2s;    
+
+    }
+    /* ===== Drag & Drop Zone ===== */
+    .drop-zone {
+  border: 3px dashed #9ca3af;
+  border-radius: 10px;
+  padding: 25px;
+  text-align: center;
+  background-color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+  position: relative;
+}
+
+.drop-zone.dragover {
+  background: #e0f2fe;
+  border-color: #0284c7;
+}
+
+.file-preview {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.file-preview i {
+  font-size: 40px;
+  color: #0284c7;
+}
+
+.file-name {
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+    /* ===== Video Preview ===== */
+    .preview {
+      margin-top: 1.5rem;
+      display: none;
+      text-align: left;
+
+    }
+
+    video {
+      width: 100%;
+      height: 200px;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+
+    /* ===== Progress Bar ===== */
+    .progress-container {
+      display: none;
+      margin-top: 1rem;
+      text-align: left;
+    }
+
+    .progress-bar {
+      height: 10px;
+      width: 0%;
+      background: #007bff;
+      border-radius: 5px;
+      transition: width 0.3s;
+    }
+
+    /* ===== Submit Button ===== */
+    button {
+      margin-top: 1.5rem;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
 </style>
 </head>
 <body>
@@ -440,17 +576,13 @@
     </div>
 
     <div class="sidebar-nav">
-        <a href="#" class="active">
+        <a href="{{route('teacher.dashboard')}}" class="active">
             <i class="fas fa-home"></i>
             Dashboard
         </a>
         <a href="{{route('teacher.videoUpload')}}">
             <i class="fas fa-video"></i>
-            Upload Videos
-        </a>
-        <a href="{{route('teacher.documentUpload')}}">
-            <i class="fas fa-file"></i>
-            Upload Documents
+            Upload Video
         </a>
         <a href="#">
             <i class="fas fa-calendar-plus"></i>
@@ -494,7 +626,7 @@
 <div class="main-content">
     <!-- Header -->
     <div class="header">
-        <h1>Teacher Dashboard</h1>
+        <h1><i class="fas fa-file"></i> Upload Documents</h1>
         <div class="user-info">
             <div class="user-avatar">
                 {{ substr(auth()->user()->name, 0, 1) }}
@@ -512,127 +644,97 @@
             <i class="fas fa-chalkboard-teacher"></i>
         </div>
         <div>
-            <h2>Welcome back, {{ auth()->user()->name }}!</h2>
-            <p>Manage your classes, upload content, and connect with your students.</p>
+            <h2>This Platform Allow Teachers To Upload Documents  For Students!</h2>
+            <p><i class="fas fa-arrow-right"></i> Manage your classes, upload files, and connect with your students.</p>
         </div>
     </div>
 
-    <!-- Stats Overview -->
-    <div class="card">
-        <h3>Teaching Overview</h3>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value">24</div>
-                <div class="stat-label">Total Students</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">{{$videoCount }}</div>
-                <div class="stat-label">Videos Uploaded</div>
-            </div>
-             <div class="stat-card">
-                <div class="stat-value">{{$docCount }}</div>
-                <div class="stat-label">Documents Uploaded</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">8</div>
-                <div class="stat-label">Live Sessions</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">15</div>
-                <div class="stat-label">Announcements</div>
-            </div>
-        </div>
-    </div>
+    
 
-    <!-- Quick Actions -->
+    <!-- Video Uploads -->
     <div class="card">
-        <h3>Quick Actions</h3>
+       
         <div class="quick-actions">
-            <a href="{{route('teacher.videoUpload')}}" class="action-btn">
-                <div class="action-icon">
-                    <i class="fas fa-video"></i>
-                </div>
-                <div>Upload Video</div>
-            </a>
-            <a href="{{route('teacher.documentUpload')}}" class="action-btn">
-                <div class="action-icon">
-                    <i class="fas fa-file"></i>
-                </div>
-                <div>Upload Documents</div>
-            </a>
-            <a href="#" class="action-btn">
-                <div class="action-icon">
-                    <i class="fas fa-calendar-plus"></i>
-                </div>
-                <div>Schedule Live Session</div>
-            </a>
-            <a href="#" class="action-btn">
-                <div class="action-icon">
-                    <i class="fas fa-bullhorn"></i>
-                </div>
-                <div>Post Announcement</div>
-            </a>
-            <a href="#" class="action-btn">
-                <div class="action-icon">
-                    <i class="fas fa-comments"></i>
-                </div>
-                <div>Student Messages</div>
-            </a>
+            
+        <div class="upload-container">
+    <h2><i class="fas fa-file"></i>Upload Your Document</h2>
+     @if(session('success'))
+       <h5 style="font-weight:bold; color:darkgreen;">{{session('success')}}</h5>
+       @endif
+    <form id="documentForm" enctype="multipart/form-data">
+     @csrf
+
+      <div id="video-message" style="color:darkgreen; font-weight:bold;"></div>
+      <div id="video-error" style="color:red; font-weight:bold;"></div>
+       <div class="input-group">
+        <label for="subject">Subject</label>
+        <select name="subject" id="subject">
+          <option value="">-- Select Subject --</option>
+           @foreach($course as $cs)
+            <option value="{{$cs->title}}">{{$cs->title}}</option>
+            
+           @endforeach
+        </select>
+    </div>
+
+      <div class="input-group">
+        <label for="videoTitle">Document Title/Topic</label>
+        <input type="text" id="videoTitle" name="title" placeholder="Enter video title...">
+           
+    </div>
+
+      <!-- Drag & Drop Zone -->
+      <div class="drop-zone" id="dropZone">
+     <p id="dropText">Drag & drop a document file here or <strong>click to upload</strong></p>
+    <input type="file" id="file" name="file" hidden>
+    <div id="filePreview" class="file-preview"></div>
+     </div>
+
+
+      
+
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit"><i class="fas fa-upload"></i> Upload Document</button>
+    </form>
+  </div>
+
+
+
         </div>
     </div>
 
     <!-- Recent Activity -->
     <div class="card">
-        <h3>Recent Activity</h3>
+        <h3 style="color:darkgreen;">Recent Activity</h3>
+        
+        @foreach($document as $doc)
         <div style="margin-top: 1rem;">
             <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #f1f5f9;">
-                <div style="width: 40px; height: 40px; background: rgba(26, 71, 42, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #1a472a;">
-                    <i class="fas fa-video"></i>
-                </div>
+                
                 <div>
-                    <div style="font-weight: 600;">New video uploaded</div>
-                    @if($latestVideo)
-                    <div style="font-size: 0.85rem; color: #64748b;">{{$latestVideo->title}} - {{ $latestVideo->created_at->format('d M Y h:i A') }}</div>
-                    @else
-               <p>No video found.</p>
-                @endif
+                    <div style="font-weight: 600;">{{$doc->subject}} - File uploaded</div>
+                    <div style="font-size: 0.85rem; color: #64748b;"> <i style="color:orange;" class="fas fa-file"></i> {{$doc->title}} - {{$doc->created_at->format('l, jS, F Y')}}</div>
+                  <div style="font-size: 0.85rem; color: #64748b;"><a target="_blank" href="/storage/{{$doc->path}}"> <i style="color:orange;" class="fas fa-link"></i> Open {{$doc->title}} file</a></div>
+                  
+                </div>
+                    <div style="font-size: 0.85rem; color: #64748b;">
+                    <form action="{{route('document.destroy', $doc->id)}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this file?');">
+                    @csrf
+                   @method('DELETE')
+                  <button type="submit" style="background:red;"><i class="fas fa-trash"></i> Delete</button>
+               </form>
+                </div>
+                
+              
                 </div>
             </div>
-
-             <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #f1f5f9;">
-                <div style="width: 40px; height: 40px; background: rgba(26, 71, 42, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #1a472a;">
-                    <i class="fas fa-file"></i>
-                </div>
-                <div>
-                    <div style="font-weight: 600;">New Document uploaded</div>
-                    @if($latestDocument)
-                    <div style="font-size: 0.85rem; color: #64748b;">{{ $latestDocument->title }} - {{ $latestDocument->created_at->format('d M Y h:i A') }}</div>
-                    @else
-               <p>No document found.</p>
-                @endif
-                </div>
-            </div>
-
-            <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #f1f5f9;">
-                <div style="width: 40px; height: 40px; background: rgba(241, 196, 15, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #d97706;">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <div>
-                    <div style="font-weight: 600;">Live session completed</div>
-                    <div style="font-size: 0.85rem; color: #64748b;">Calculus Review - 1 day ago</div>
-                </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem 0;">
-                <div style="width: 40px; height: 40px; background: rgba(74, 222, 128, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #16a34a;">
-                    <i class="fas fa-bullhorn"></i>
-                </div>
-                <div>
-                    <div style="font-weight: 600;">Announcement posted</div>
-                    <div style="font-size: 0.85rem; color: #64748b;">Exam Schedule - 2 days ago</div>
-                </div>
-            </div>
-        </div>
-    </div>
+             @endforeach
+          
 </div>
 
 <script>
@@ -652,6 +754,179 @@
             sidebar.classList.remove('show');
         }
     });
+
+
+    //Document file upload
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    const form = document.getElementById('documentForm');
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('file');
+    const progressBar = document.getElementById('progressBar');
+    const progressContainer = document.querySelector('.progress-container');
+    const message = document.getElementById('video-message');
+    const error = document.getElementById('video-error');
+
+    const filePreview = document.getElementById('filePreview');
+   const dropText = document.getElementById('dropText');
+
+function showFilePreview(file) {
+    const fileType = file.name.split('.').pop().toLowerCase();
+    let icon = 'fas fa-file'; // default icon
+
+    //  Choose icon by file type
+    if (['pdf'].includes(fileType)) icon = 'fa-file-pdf';
+    else if (['doc', 'docx'].includes(fileType)) icon = 'fa-file-word';
+    else if (['xls', 'xlsx'].includes(fileType)) icon = 'fa-file-excel';
+    else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileType)) icon = 'fa-file-image';
+
+    // Clear old content
+    dropText.style.display = 'none';
+    filePreview.innerHTML = `
+        <i class="fas ${icon}"></i>
+        <span class="file-name">${file.name}</span>
+    `;
+}
+
+//  Handle drag & drop and file input
+dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+});
+
+dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('dragover');
+});
+
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    fileInput.files = e.dataTransfer.files; // assign dropped file to input
+    showFilePreview(file);
+});
+
+dropZone.addEventListener('click', () => fileInput.click());
+
+fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) showFilePreview(file);
+});
+
+
+
+    // Drag & Drop Events
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        fileInput.files = e.dataTransfer.files; // assign dropped file to input
+    });
+
+    //When user clicks drop zone → open file dialog
+    dropZone.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    // Submit Form via AJAX
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Clear old messages
+        message.textContent = '';
+        error.textContent = '';
+        progressBar.style.width = '0%';
+
+        const file = fileInput.files[0];
+        const subject = document.getElementById('subject').value;
+        const title = document.getElementById('videoTitle').value;
+
+        if (!file) {
+            error.textContent = 'Please select a file to upload.';
+            return;
+        }
+
+        // Allowed file types: PDF, Word, Excel, Images
+        const allowedExtensions = [
+            'pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'jpeg', 'png', 'gif'
+        ];
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+
+        if (!allowedExtensions.includes(fileExtension)) {
+            error.textContent = 'Invalid file type. Only PDF, Word, Excel, and Images are allowed.';
+            return;
+        }
+
+        // Build FormData
+        const formData = new FormData();
+        formData.append('subject', subject);
+        formData.append('title', title);
+        formData.append('file', file);
+
+        progressContainer.style.display = 'block';
+        progressBar.style.width = '0%';
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/upload-document', true); // your Laravel route
+        xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('input[name="_token"]').value);
+
+        //  Progress Event
+        xhr.upload.onprogress = function(e) {
+            if (e.lengthComputable) {
+                const percent = (e.loaded / e.total) * 100;
+                progressBar.style.width = percent + '%';
+            }
+        };
+
+        // On Success / Error
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                
+                
+
+                 // Simulated upload progress
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 10;
+        progressBar.style.width = progress + '%';
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          message.textContent = 'Document uploaded successfully!';
+        
+          progressBar.style.width = '100%';
+          progressContainer.style.display = 'none';
+
+          form.reset();
+          previewContainer.style.display = 'none';
+        }
+      }, 200);
+
+
+            } else {
+                error.textContent = 'Upload failed. Please try again.';
+            }
+        };
+
+        xhr.onerror = function() {
+            error.textContent = 'An error occurred while uploading.';
+        };
+
+        xhr.send(formData);
+    });
+});
+
+
 </script>
 
 </body>

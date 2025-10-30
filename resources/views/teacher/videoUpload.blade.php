@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teacher Dashboard - Restart Academy</title>
+<title>Teacher Dashboard - Video Upload</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -420,6 +420,130 @@
             padding: 1.5rem;
         }
     }
+
+
+.upload-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      width: 600px;
+      text-align: center;
+    }
+
+    .upload-container h2 {
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    /* ===== Title Input ===== */
+    .input-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .input-group label {
+      font-weight: 600;
+      color: #555;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .input-group input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .input-group input[type="text"]:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+    
+    .input-group select{
+          border-color: #007bff;
+          width: 100%;  
+          padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.2s;    
+
+    }
+    /* ===== Drag & Drop Zone ===== */
+    .drop-zone {
+      border: 2px dashed #007bff;
+      border-radius: 10px;
+      padding: 2rem;
+      background: #f9f9f9;
+      cursor: pointer;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .drop-zone.dragover {
+      background: #e3f2fd;
+      border-color: #0056b3;
+    }
+
+    .drop-zone p {
+      color: #555;
+      font-size: 1rem;
+    }
+
+    .drop-zone input {
+      display: none;
+    }
+
+    /* ===== Video Preview ===== */
+    .preview {
+      margin-top: 1.5rem;
+      display: none;
+      text-align: left;
+
+    }
+
+    video {
+      width: 100%;
+      height: 200px;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+
+    /* ===== Progress Bar ===== */
+    .progress-container {
+      display: none;
+      margin-top: 1rem;
+      text-align: left;
+    }
+
+    .progress-bar {
+      height: 10px;
+      width: 0%;
+      background: #007bff;
+      border-radius: 5px;
+      transition: width 0.3s;
+    }
+
+    /* ===== Submit Button ===== */
+    button {
+      margin-top: 1.5rem;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
 </style>
 </head>
 <body>
@@ -440,13 +564,9 @@
     </div>
 
     <div class="sidebar-nav">
-        <a href="#" class="active">
+        <a href="{{route('teacher.dashboard')}}" class="active">
             <i class="fas fa-home"></i>
             Dashboard
-        </a>
-        <a href="{{route('teacher.videoUpload')}}">
-            <i class="fas fa-video"></i>
-            Upload Videos
         </a>
         <a href="{{route('teacher.documentUpload')}}">
             <i class="fas fa-file"></i>
@@ -494,7 +614,7 @@
 <div class="main-content">
     <!-- Header -->
     <div class="header">
-        <h1>Teacher Dashboard</h1>
+        <h1><i class="fas fa-video"></i> Upload Videos</h1>
         <div class="user-info">
             <div class="user-avatar">
                 {{ substr(auth()->user()->name, 0, 1) }}
@@ -512,127 +632,100 @@
             <i class="fas fa-chalkboard-teacher"></i>
         </div>
         <div>
-            <h2>Welcome back, {{ auth()->user()->name }}!</h2>
-            <p>Manage your classes, upload content, and connect with your students.</p>
+            <h2>This Platform Allow Teachers To Upload Video Lesson For Students!</h2>
+            <p><i class="fas fa-arrow-right"></i> Manage your classes, upload videos, and connect with your students.</p>
         </div>
     </div>
 
-    <!-- Stats Overview -->
-    <div class="card">
-        <h3>Teaching Overview</h3>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value">24</div>
-                <div class="stat-label">Total Students</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">{{$videoCount }}</div>
-                <div class="stat-label">Videos Uploaded</div>
-            </div>
-             <div class="stat-card">
-                <div class="stat-value">{{$docCount }}</div>
-                <div class="stat-label">Documents Uploaded</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">8</div>
-                <div class="stat-label">Live Sessions</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">15</div>
-                <div class="stat-label">Announcements</div>
-            </div>
-        </div>
-    </div>
+    
 
-    <!-- Quick Actions -->
+    <!-- Video Uploads -->
     <div class="card">
-        <h3>Quick Actions</h3>
+       
         <div class="quick-actions">
-            <a href="{{route('teacher.videoUpload')}}" class="action-btn">
-                <div class="action-icon">
-                    <i class="fas fa-video"></i>
-                </div>
-                <div>Upload Video</div>
-            </a>
-            <a href="{{route('teacher.documentUpload')}}" class="action-btn">
-                <div class="action-icon">
-                    <i class="fas fa-file"></i>
-                </div>
-                <div>Upload Documents</div>
-            </a>
-            <a href="#" class="action-btn">
-                <div class="action-icon">
-                    <i class="fas fa-calendar-plus"></i>
-                </div>
-                <div>Schedule Live Session</div>
-            </a>
-            <a href="#" class="action-btn">
-                <div class="action-icon">
-                    <i class="fas fa-bullhorn"></i>
-                </div>
-                <div>Post Announcement</div>
-            </a>
-            <a href="#" class="action-btn">
-                <div class="action-icon">
-                    <i class="fas fa-comments"></i>
-                </div>
-                <div>Student Messages</div>
-            </a>
+            
+        <div class="upload-container">
+    <h2><i class="fas fa-video"></i>Upload Your Video</h2>
+     @if(session('success'))
+       <h5 style="font-weight:bold; color:darkgreen;">{{session('success')}}</h5>
+       @endif
+    <form id="videoUploadForm" enctype="multipart/form-data">
+     @csrf
+
+      <div id="video-message" style="color:darkgreen; font-weight:bold;"></div>
+      <div id="video-error" style="color:red; font-weight:bold;"></div>
+       <div class="input-group">
+       
+        <label for="subject">Subject</label>
+        <select name="subject" id="subject">
+          <option value="">-- Select Subject --</option>
+           @foreach($course as $cs)
+            <option value="{{$cs->title}}">{{$cs->title}}</option>
+            
+           @endforeach
+        </select>
+        
+    </div>
+
+      <div class="input-group">
+        <label for="videoTitle">Video Title/Topic</label>
+        <input type="text" id="videoTitle" name="title" placeholder="Enter video title...">
+           
+    </div>
+
+      <!-- Drag & Drop Zone -->
+      <div class="drop-zone" id="dropZone">
+        <p>Drag & drop a video file here or <strong>click to upload</strong></p>
+        <input type="file" id="videoFile" name="video" accept="video/*">
+      </div>
+
+      <!-- Video Preview -->
+      <div class="preview" id="preview">
+        <label>Preview:</label>
+       <video id="videoPreview" controls></video>
+
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit"><i class="fas fa-upload"></i> Upload Video</button>
+    </form>
+  </div>
+
+
+
         </div>
     </div>
 
     <!-- Recent Activity -->
     <div class="card">
-        <h3>Recent Activity</h3>
+        <h3 style="color:darkgreen;">Recent Activity</h3>
+        
+        @foreach($videos as $video)
         <div style="margin-top: 1rem;">
             <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #f1f5f9;">
-                <div style="width: 40px; height: 40px; background: rgba(26, 71, 42, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #1a472a;">
-                    <i class="fas fa-video"></i>
-                </div>
+                
                 <div>
-                    <div style="font-weight: 600;">New video uploaded</div>
-                    @if($latestVideo)
-                    <div style="font-size: 0.85rem; color: #64748b;">{{$latestVideo->title}} - {{ $latestVideo->created_at->format('d M Y h:i A') }}</div>
-                    @else
-               <p>No video found.</p>
-                @endif
+                    <div style="font-weight: 600;">{{$video->subject}} - video uploaded</div>
+                    <div style="font-size: 0.85rem; color: #64748b;"> <i style="color:red;" class="fas fa-video"></i> {{$video->title}} - {{$video->created_at->format('l, jS, F Y')}}</div>
+                  </div>
+                    <div style="font-size: 0.85rem; color: #64748b;">
+                    <form action="{{route('teacher.destroy', $video->id)}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this video?');">
+                    @csrf
+                   @method('DELETE')
+                  <button type="submit" style="background:red;"><i class="fas fa-trash"></i> Delete</button>
+               </form>
+                </div>
+                
+              
                 </div>
             </div>
-
-             <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #f1f5f9;">
-                <div style="width: 40px; height: 40px; background: rgba(26, 71, 42, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #1a472a;">
-                    <i class="fas fa-file"></i>
-                </div>
-                <div>
-                    <div style="font-weight: 600;">New Document uploaded</div>
-                    @if($latestDocument)
-                    <div style="font-size: 0.85rem; color: #64748b;">{{ $latestDocument->title }} - {{ $latestDocument->created_at->format('d M Y h:i A') }}</div>
-                    @else
-               <p>No document found.</p>
-                @endif
-                </div>
-            </div>
-
-            <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #f1f5f9;">
-                <div style="width: 40px; height: 40px; background: rgba(241, 196, 15, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #d97706;">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <div>
-                    <div style="font-weight: 600;">Live session completed</div>
-                    <div style="font-size: 0.85rem; color: #64748b;">Calculus Review - 1 day ago</div>
-                </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem 0;">
-                <div style="width: 40px; height: 40px; background: rgba(74, 222, 128, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #16a34a;">
-                    <i class="fas fa-bullhorn"></i>
-                </div>
-                <div>
-                    <div style="font-weight: 600;">Announcement posted</div>
-                    <div style="font-size: 0.85rem; color: #64748b;">Exam Schedule - 2 days ago</div>
-                </div>
-            </div>
-        </div>
-    </div>
+             @endforeach
+          
 </div>
 
 <script>
@@ -652,6 +745,119 @@
             sidebar.classList.remove('show');
         }
     });
+
+
+//Upload video files
+
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('videoFile');
+    const videoPreview = document.getElementById('videoPreview');
+    const previewContainer = document.getElementById('preview');
+    const progressBar = document.getElementById('progressBar');
+    const progressContainer = document.querySelector('.progress-container');
+    const form = document.getElementById('videoUploadForm');
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('video/')) {
+        fileInput.files = e.dataTransfer.files;
+        showPreview(file);
+      }
+      else {
+         document.getElementById('video-error').innerHTML='Please drop a valid video file!';
+        
+      }
+    });
+
+     // Trigger file input when clicking drop zone
+    dropZone.addEventListener('click', () => fileInput.click());
+
+     // Preview when selecting file manually
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      if (file) showPreview(file);
+    });
+
+    // Show video preview
+    function showPreview(file) {
+      const videoURL = URL.createObjectURL(file);
+      videoPreview.src = videoURL;
+      previewContainer.style.display = 'block';
+    }
+
+    // Submit form with Fetch API (AJAX)
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const file = fileInput.files[0];
+      const title = document.getElementById('videoTitle').value;
+      const subject = document.getElementById('subject').value;
+
+      if (!file) {
+        document.getElementById('video-error').innerHTML='Please select a video file first!';
+        
+        return;
+      }
+     
+      const formData = new FormData();
+      formData.append('subject', subject);
+      formData.append('title', title);
+      formData.append('video', file);
+
+      progressContainer.style.display = 'block';
+      progressBar.style.width = '0%';
+
+      try {
+        const response = await fetch('{{ route("videos.store") }}', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+          }
+        });
+
+        if (!response.ok) throw new Error('Upload failed');
+        const data = await response.json();
+
+
+           // Simulated upload progress
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 10;
+        progressBar.style.width = progress + '%';
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          document.getElementById('video-message').innerHTML='Video Uploaded successful!' ;
+        
+          progressBar.style.width = '100%';
+          progressContainer.style.display = 'none';
+
+          form.reset();
+          previewContainer.style.display = 'none';
+        }
+      }, 200);
+
+      } catch (error) {
+        document.getElementById('video-error').innerHTML='Something went wrong! Please fill form Correctly.';
+        
+      }
+    });
+
+
+
+
+
 </script>
 
 </body>
