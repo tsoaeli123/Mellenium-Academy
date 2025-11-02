@@ -9,14 +9,42 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\WatchVideoController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\LiveClassController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Document;
 use App\Models\video;
+use App\Http\Controllers\ChatController;
+
+Route::middleware('auth')->group(function() {
+    // Show chat between teacher and student
+    Route::get('/chat/{teacher}/{student}', [ChatController::class, 'getMessages'])->name('chat.show');
+
+    // Send a message
+    Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+});
+
+use App\Http\Controllers\SessionController;
+
+Route::middleware('auth')->group(function() {
+    Route::get('/sessions', [SessionController::class, 'index'])->name('sessions.index');
+    Route::get('/sessions/create', [SessionController::class, 'create'])->name('sessions.create');
+    Route::post('/sessions', [SessionController::class, 'store'])->name('sessions.store');
+});
+
+Route::middleware(['auth', 'role:teacher'])->group(function () {
+    Route::get('/teacher/sessions/create', [LiveSessionController::class, 'create'])->name('sessions.create');
+});
 
 // Public route
 Route::get('/', function () {
     return view('welcome');
+});
+Route::middleware(['auth'])->group(function () {
+    Route::get('/teacher/live-classes', [LiveClassController::class, 'index'])->name('live_classes.index');
+    Route::get('/teacher/live-classes/create', [LiveClassController::class, 'create'])->name('live_classes.create');
+    Route::post('/teacher/live-classes', [LiveClassController::class, 'store'])->name('live_classes.store');
+    Route::delete('/teacher/live-classes/{liveClass}', [LiveClassController::class, 'destroy'])->name('live_classes.destroy');
 });
 
 // Dashboard redirect based on role
