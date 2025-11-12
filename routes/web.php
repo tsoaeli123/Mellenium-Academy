@@ -14,6 +14,9 @@ use App\Http\Controllers\StudentAnnouncementController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MessageTeacherController;
+use App\Http\Controllers\LiveSessionController;
+use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\ChatSessionController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -136,6 +139,20 @@ Route::get('/chat', [ChatController::class, 'index'])->name('chat.chat');
 
 });
 
+ //Live session zoom
+Route::middleware(['auth'])->group(function () {
+
+Route::get('/live/{roomId}', [LiveSessionController::class, 'index'])->name('live.live');
+Route::post('/chat/send', [ChatSessionController::class, 'send'])->name('chat.send');
+Route::get('/chat/history/{roomId}', [ChatSessionController::class, 'history'])->name('chat.history');
+
+Route::post('/participants', [ParticipantController::class, 'store']);
+Route::get('/getparticipants', [ParticipantController::class, 'index']);
+
+Route::delete('/participants/{socket_id}', [ParticipantController::class, 'destroy']);
+
+
+});
 
 //Chat teachers messages
 Route::middleware('auth')->group(function () {

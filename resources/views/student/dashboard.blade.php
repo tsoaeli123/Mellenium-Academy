@@ -514,6 +514,10 @@
             <i class="fas fa-user-graduate"></i>
             My Courses
         </a>
+        <a href="{{route('live.live',Auth::id())}}">
+            <i class="fas fa-calendar-plus"></i>
+            Live Sessions
+        </a>
         <a href="{{route('chat.chat')}}" class="action-btn">
                   <i class="fa-solid fa-comment-dots"></i>
                Teacher Chat 

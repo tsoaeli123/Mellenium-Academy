@@ -452,7 +452,7 @@
             <i class="fas fa-file"></i>
             Upload Documents
         </a>
-        <a href="#">
+        <a href="{{route('live.live',Auth::id())}}">
             <i class="fas fa-calendar-plus"></i>
             Live Sessions
         </a>
